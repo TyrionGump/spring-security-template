@@ -19,7 +19,12 @@ repositories {
 
 dependencies {
     implementation(libs.spring.boot.starter)
+    implementation(libs.spring.boot.web)
+    implementation("org.projectlombok:lombok")
+    implementation(libs.spring.boot.security)
     testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.spring.boot.security.test)
+    runtimeOnly(libs.spring.boot.devtools)
     testRuntimeOnly(libs.junit.launcher)
 }
 
