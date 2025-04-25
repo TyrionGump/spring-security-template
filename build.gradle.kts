@@ -20,11 +20,20 @@ repositories {
 dependencies {
     implementation(libs.spring.boot.starter)
     implementation(libs.spring.boot.web)
-    implementation("org.projectlombok:lombok")
+    implementation(libs.spring.boot.starter.jdbc)
+    implementation(libs.spring.boot.starter.jpa)
     implementation(libs.spring.boot.security)
+    runtimeOnly(libs.spring.boot.devtools)
+
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
+    runtimeOnly(libs.pgsql.driver)
+
+
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.boot.security.test)
-    runtimeOnly(libs.spring.boot.devtools)
+    testAnnotationProcessor(libs.lombok)
+    testCompileOnly(libs.lombok)
     testRuntimeOnly(libs.junit.launcher)
 }
 

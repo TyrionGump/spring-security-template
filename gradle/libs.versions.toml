@@ -10,10 +10,15 @@ spring-dependency-management = "1.1.7"
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter" }
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-boot-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-data-jdbc" }
+spring-boot-starter-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
 spring-boot-security = { module = "org.springframework.boot:spring-boot-starter-security" }
 spring-boot-security-test = { module = "org.springframework.security:spring-security-test" }
+
 spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 junit-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+lombok = { module = "org.projectlombok:lombok" }
+pgsql-driver = { module = "org.postgresql:postgresql" }
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }

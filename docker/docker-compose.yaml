@@ -1,0 +1,14 @@
+name: spring_security_template
+
+services:
+  postgres:
+    image: postgres:alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=spring_security_template
+    volumes:
+      - ../src/main/resources/database/init:/docker-entrypoint-initdb.d:ro

@@ -1,18 +1,17 @@
-package org.bugmakers404.tools.filter;
+package org.bugmakers404.tools.config;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
-@EnableWebSecurity
 public class SecurityFilterConfig {
 
   /**
@@ -40,6 +39,7 @@ public class SecurityFilterConfig {
     // the initialisation of this catch-all filter collide with others. Or, Set the @Order of
     // this bean as the last one.
     http.securityMatcher("/**")
+        .csrf(CsrfConfigurer::disable)
         .authorizeHttpRequests(requests -> requests.anyRequest().authenticated());
 
     // Enable form-based login (renders a login HTML form at /login)
@@ -75,7 +75,8 @@ public class SecurityFilterConfig {
   SecurityFilterChain noSecurityFilterChain(HttpSecurity http) throws Exception {
     http
         // restrict this chain to URLs under /noAuth
-        .securityMatcher("/noAuth/**", "/error")
+        .csrf(CsrfConfigurer::disable)
+        .securityMatcher("/noAuth", "/error", "/register")
         .authorizeHttpRequests(requests -> requests.anyRequest().permitAll());
     return http.build();
   }

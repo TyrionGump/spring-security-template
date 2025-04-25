@@ -1,10 +1,11 @@
-package org.bugmakers404.tools.filter;
+package org.bugmakers404.tools.controller;
 
+import org.bugmakers404.tools.config.SecurityFilterConfig;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class FilterEndpoints {
+public class FilterController {
 
   /**
    * The access of this endpoint is managed by {@code defaultSecurityFilterChain} in {@link SecurityFilterConfig}
