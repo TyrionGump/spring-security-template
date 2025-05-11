@@ -20,7 +20,6 @@ repositories {
 dependencies {
     implementation(libs.spring.boot.starter)
     implementation(libs.spring.boot.web)
-    implementation(libs.spring.boot.starter.jdbc)
     implementation(libs.spring.boot.starter.jpa)
     implementation(libs.spring.boot.security)
     runtimeOnly(libs.spring.boot.devtools)
