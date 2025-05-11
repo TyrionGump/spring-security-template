@@ -32,7 +32,7 @@ public class SecurityFilterConfig {
    * </p>
    */
   @Bean
-  @Order
+  @Order(2)
   public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
     // Require authentication for all requests not matched by earlier filter chains
     // Explicitly set up the URLs. Otherwise, the default `AnyRequestMatcher.INSTANCE` pattern makes
@@ -74,7 +74,8 @@ public class SecurityFilterConfig {
   @Order(1) // Once a URL is first matched with a filter, others will be disregarded
   SecurityFilterChain noSecurityFilterChain(HttpSecurity http) throws Exception {
     http
-        // restrict this chain to URLs under /noAuth
+        // By default, csrf can allow get requests.
+        // However, user registration requires post requests.
         .csrf(CsrfConfigurer::disable)
         .securityMatcher("/noAuth", "/error", "/register")
         .authorizeHttpRequests(requests -> requests.anyRequest().permitAll());

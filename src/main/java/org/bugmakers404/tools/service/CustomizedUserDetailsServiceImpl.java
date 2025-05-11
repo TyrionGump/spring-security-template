@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class CustomizedUserDetailsServiceImpl implements UserDetailsService {
 
   private final UserInDBDAO userInDBDAO;
 
