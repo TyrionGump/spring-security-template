@@ -38,15 +38,15 @@ flowchart
     end
 
 %% Flow steps
-    Request -->|" 1. Receive "| Filters
-    Filters -->|" 2. Extract User credentials "| Authentication
-    Authentication -->|" 3. authenticate() "| AuthenticationManager
-    AuthenticationManager -->|" 4. authenticate() "| AuthenticationProvider
-    AuthenticationProvider -->|" 5. loadUserByUsername() "| UserDetailsService/Manager
-    UserDetailsService/Manager -->|" 6. UserDetails "| AuthenticationProvider
-    AuthenticationProvider -->|" 7. Authentication "| AuthenticationManager
-    AuthenticationManager -->|" 8. Authentication "| Authentication
-    Authentication -->|" 9. Authentication "| Filters
-    Filters -->|" 10. Return "| Response
+    Request -->|" 1.Receive "| Filters
+    Filters -->|" 2.Extract User credentials "| Authentication
+    Authentication -->|" 3.authenticate() "| AuthenticationManager
+    AuthenticationManager -->|" 4.authenticate() "| AuthenticationProvider
+    AuthenticationProvider -->|" 5.loadUserByUsername() "| UserDetailsService/Manager
+    UserDetailsService/Manager -->|" 6.UserDetails "| AuthenticationProvider
+    AuthenticationProvider -->|" 7.Authentication "| AuthenticationManager
+    AuthenticationManager -->|" 8.Authentication "| Authentication
+    Authentication -->|" 9.Authentication "| Filters
+    Filters -->|" 10.Return "| Response
 
 ```

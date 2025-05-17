@@ -2,8 +2,8 @@ package org.bugmakers404.tools.service;
 
 
 import lombok.RequiredArgsConstructor;
-import org.bugmakers404.tools.model.UserInDB;
 import org.bugmakers404.tools.dao.UserInDBDAO;
+import org.bugmakers404.tools.model.UserInDB;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.User.UserBuilder;
@@ -12,8 +12,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+
 /**
- * Provide the data source of users for {@link DaoAuthenticationProvider}.
+ * Service implementation that provides user details to Spring Security’s
+ * {@link DaoAuthenticationProvider} during authentication.
  */
 @Service
 @RequiredArgsConstructor

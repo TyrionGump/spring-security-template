@@ -7,9 +7,9 @@ create table mock_user
     role     text not null
 );
 
--- The password of default users is plain text without encryption
 insert into mock_user
 values (default, 'admin', '{noop}12345', 'admin@email.com', 'admin');
 
 insert into mock_user
-values (default, 'user', '{noop}12345', 'user@email.com', 'admin');
+values (default, 'user', '{bcrypt}$2a$10$VVlYlP4xwSivh0KDMM7qqO5e4iPf4efMxaZJhd2.WAt1PMzrV/aim',
+        'user@email.com', 'admin');
