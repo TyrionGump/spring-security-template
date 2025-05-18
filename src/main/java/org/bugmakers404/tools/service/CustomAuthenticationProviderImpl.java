@@ -3,6 +3,7 @@ package org.bugmakers404.tools.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -11,9 +12,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+/**
+ * Custom {@link AuthenticationProvider} for {@link ProviderManager} that authenticates credentials
+ * by delegating to the injected UserDetailsService and PasswordEncoder.
+ */
 @Component
 @RequiredArgsConstructor
-public class CustomizedAuthenticationProviderImpl implements AuthenticationProvider {
+public class CustomAuthenticationProviderImpl implements AuthenticationProvider {
 
   private final UserDetailsService userDetailsService;
 
