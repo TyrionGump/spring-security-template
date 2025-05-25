@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class FilterController {
 
   /**
-   * The access of this endpoint is managed by {@code defaultSecurityFilterChain} in {@link SecurityFilterConfig}
+   * The access of this endpoint is managed by {@code defaultSecurityFilterChain} in
+   * {@link SecurityFilterConfig}
    */
   @GetMapping(path = "/default")
   public String defaultSpringSecurityConfig() {
@@ -16,7 +17,8 @@ public class FilterController {
   }
 
   /**
-   * The access of this endpoint is managed by {@code noSecurityFilterChain} in {@link SecurityFilterConfig}
+   * The access of this endpoint is managed by {@code noSecurityFilterChain} in
+   * {@link SecurityFilterConfig}
    */
   @GetMapping(path = "/noAuth")
   public String noAuth() {
@@ -24,18 +26,11 @@ public class FilterController {
   }
 
   /**
-   * The access of this endpoint is managed by {@code defaultFormLogin} in {@link SecurityFilterConfig}
+   * The access of this endpoint is managed by {@code noSecurityFilterChain} in
+   * {@link SecurityFilterConfig}
    */
-  @GetMapping(path = "/defaultFormLogin")
-  public String defaultFormLogin() {
-    return "defaultFormLogin";
-  }
-
-  /**
-   * The access of this endpoint is managed by {@code httpBasicLogin} in {@link SecurityFilterConfig}
-   */
-  @GetMapping(path = "/httpBasicLogin")
-  public String httpBasicLogin() {
-    return "/httpBasicLogin";
+  @GetMapping(path = "/invalid_session")
+  public String sessionExpiry() {
+    return "The session ID is invalid. A potential reason is that the session has expired";
   }
 }

@@ -41,7 +41,7 @@ public class SecurityFilterConfig {
         // By default, csrf can allow get requests.
         // However, user registration requires post requests.
         .csrf(CsrfConfigurer::disable)
-        .securityMatcher("/noAuth", "/error", "/register")
+        .securityMatcher("/noAuth", "/error", "/register", "/invalid_session")
         .authorizeHttpRequests(requests -> requests.anyRequest().permitAll());
     return http.build();
   }
@@ -75,11 +75,11 @@ public class SecurityFilterConfig {
         .authorizeHttpRequests(requests -> requests.anyRequest().authenticated());
 
     // Enable form-based login (renders a login HTML form at /login)
-    // Handle the default form login by {@code UsernamePasswordAuthenticationFilter.attemptAuthentication}
+    // Handle the default form login by `UsernamePasswordAuthenticationFilter.attemptAuthentication`
     http.formLogin(withDefaults());
 
     // Also support HTTP Basic authentication (e.g., for cURL or API clients)
-    // Handle the http login by {@code BasicAuthenticationFilter.doFilterInternal}
+    // Handle the http login by `BasicAuthenticationFilter.doFilterInternal`
     http.httpBasic(
         // We override the default `AuthenticationEntryPoint` to throw our own exception
         // and return a custom response on authentication failure.
@@ -91,6 +91,21 @@ public class SecurityFilterConfig {
         // custom response on authorization failure.
         httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(
             new CustomAccessDeniedException()));
+
+    // For invalid session id, including session expiry, redirect users to a specific url.
+    http.sessionManagement(
+        httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.invalidSessionUrl(
+            "/invalid_session").maximumSessions(3).maxSessionsPreventsLogin(true));
+
+    // Session Fixation Attack
+    // An attacker first acquires a valid session ID before the user authenticates. They then lure
+    // the victim into using that same ID (for example, localhost:8080?sessionId=123456).
+    // Because the server issues a session ID on initial access—regardless of login status—the victim’s
+    // subsequent login binds their credentials to the attacker’s pre-set session.
+    // The attacker, knowing this session ID, can then reuse it to hijack the victim’s authenticated session.
+    http.sessionManagement(
+        httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionFixation()
+            .changeSessionId());
 
     return http.build();
   }
