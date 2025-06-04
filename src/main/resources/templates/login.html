@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Sign In</title>
+</head>
+<body>
+<div class="login-container">
+  <h1>My Application Login</h1>
+  <form th:action="@{/login}" method="post">
+    <!--The request parameters of username and password have to align with the ones defined in
+      {@link UsernamePasswordAuthenticationFilter}. Otherwise, specify parameter names in
+       {@code http.formLogin}-->
+    <div th:if="${logout}">
+      <p class="error">You have logged out.</p>
+    </div>
+    <div>
+      <label for="username">Username</label>
+      <input type="text" name="username" id="username" required autofocus/>
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" required/>
+    </div>
+    <div th:if="${loginError}">
+      <p class="error">Invalid username or password.</p>
+    </div>
+    <button type="submit">Sign In</button>
+  </form>
+</div>
+</body>
+</html>

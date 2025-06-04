@@ -2,7 +2,9 @@
 
 This document illustrates how Spring Security routes and handles authentication and authorization
 exceptions—showing how `ExceptionTranslationFilter` intercepts errors and delegates to the correct
-handler to produce a 401 or 403 response.
+handler to produce a 401 or 403 response. The custom implementations can be found
+in [CustomAccessDeniedException.java](../src/main/java/org/bugmakers404/spring/security/template/exception/CustomAccessDeniedException.java)
+and [CustomBasicAuthenticationEntryPoint.java](../src/main/java/org/bugmakers404/spring/security/template/exception/CustomBasicAuthenticationEntryPoint.java)
 
 ```mermaid
 %%{init: {"themeVariables': { 'fontSize': '12px'}}}%%

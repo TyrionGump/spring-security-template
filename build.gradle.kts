@@ -22,11 +22,12 @@ dependencies {
     implementation(libs.spring.boot.web)
     implementation(libs.spring.boot.starter.jpa)
     implementation(libs.spring.boot.security)
-    runtimeOnly(libs.spring.boot.devtools)
+    implementation(libs.spring.boot.thymeleaf)
 
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
     runtimeOnly(libs.pgsql.driver)
+    runtimeOnly(libs.spring.boot.devtools)
 
 
     testImplementation(libs.spring.boot.starter.test)

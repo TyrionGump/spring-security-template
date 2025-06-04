@@ -1,0 +1,23 @@
+<configuration>
+  <appender name="SPRING_SECURITY_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %cyan(%-25logger{0}) - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="COSTOM_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %magenta(%-25logger{0}) - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- Logger for my code -->
+  <logger name="org.bugmakers404.spring.security.template" level="DEBUG" additivity="false">
+    <appender-ref ref="COSTOM_CONSOLE"/>
+  </logger>
+
+  <!-- Logger for Spring Security -->
+  <logger name="org.springframework.security" level="DEBUG" additivity="false">
+    <appender-ref ref="SPRING_SECURITY_CONSOLE"/>
+  </logger>
+</configuration>
