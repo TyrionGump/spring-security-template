@@ -1,7 +1,7 @@
-package org.bugmakers404.tools.dao;
+package org.bugmakers404.spring.security.template.dao;
 
 import java.util.Optional;
-import org.bugmakers404.tools.model.UserInDB;
+import org.bugmakers404.spring.security.template.model.UserInDB;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

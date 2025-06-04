@@ -1,9 +1,9 @@
-package org.bugmakers404.tools.exception;
+package org.bugmakers404.spring.security.template.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import org.bugmakers404.tools.config.SecurityFilterConfig;
+import org.bugmakers404.spring.security.template.config.SecurityFilterConfig;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;

@@ -1,9 +1,9 @@
-package org.bugmakers404.tools.service;
+package org.bugmakers404.spring.security.template.service;
 
 
 import lombok.RequiredArgsConstructor;
-import org.bugmakers404.tools.dao.UserInDBDAO;
-import org.bugmakers404.tools.model.UserInDB;
+import org.bugmakers404.spring.security.template.dao.UserInDBDAO;
+import org.bugmakers404.spring.security.template.model.UserInDB;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.userdetails.User;

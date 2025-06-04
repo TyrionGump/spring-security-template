@@ -1,9 +1,10 @@
-package org.bugmakers404.tools.config;
+package org.bugmakers404.spring.security.template.config;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
-import org.bugmakers404.tools.exception.CustomAccessDeniedException;
-import org.bugmakers404.tools.exception.CustomBasicAuthenticationEntryPoint;
+import lombok.RequiredArgsConstructor;
+import org.bugmakers404.spring.security.template.exception.CustomAccessDeniedException;
+import org.bugmakers404.spring.security.template.exception.CustomBasicAuthenticationEntryPoint;
+import org.bugmakers404.spring.security.template.handler.CustomAuthenticationFailureHandler;
+import org.bugmakers404.spring.security.template.handler.CustomAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -12,7 +13,12 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityFilterConfig {
+
+  private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
+  private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
   /**
    * Defines a security filter chain that only applies to requests under "/noAuth/**".
@@ -51,17 +57,6 @@ public class SecurityFilterConfig {
    *
    * <p>Ensures that all remaining endpoints require authentication and provides both
    * form-based and HTTP Basic login mechanisms.</p>
-   *
-   * <p><strong>Configuration details:</strong>
-   * <ul>
-   *   <li>{@code authorizeHttpRequests(auth -> auth.anyRequest().authenticated())}
-   *       – Require a logged-in user for every URL.</li>
-   *   <li>{@code formLogin(withDefaults())}
-   *       – Enable the default Spring Security login form at {@code /login}.</li>
-   *   <li>{@code httpBasic(withDefaults())}
-   *       – Support HTTP Basic authentication for API clients and non-browser callers.</li>
-   * </ul>
-   * </p>
    */
   @Bean
   @Order(2)
@@ -71,12 +66,52 @@ public class SecurityFilterConfig {
     // the initialisation of this catch-all filter collide with others. Or, Set the @Order of
     // this bean as the last one.
     http.securityMatcher("/**")
-        .csrf(CsrfConfigurer::disable)
-        .authorizeHttpRequests(requests -> requests.anyRequest().authenticated());
+        .csrf(CsrfConfigurer::disable);
+
+    // Rules are evaluated in order; Spring Security stops at the first matching rule.
+    http.authorizeHttpRequests(
+        requests -> requests.requestMatchers("/login/**", "/logout").permitAll()
+            .anyRequest().authenticated());
 
     // Enable form-based login (renders a login HTML form at /login)
-    // Handle the default form login by `UsernamePasswordAuthenticationFilter.attemptAuthentication`
-    http.formLogin(withDefaults());
+    // `UsernamePasswordAuthenticationFilter.attemptAuthentication` handles form submission.
+    http.formLogin(form ->
+        form
+            // Custom login entry URL (default value is "/login")
+            .loginPage("/login")
+            // Redirect here if no saved request exists; otherwise redirect to the originally requested protected URL.
+            .defaultSuccessUrl("/default")
+            // Define the parameter names of the post request provided by the login form
+            .usernameParameter("username")
+            .passwordParameter("password")
+            // Customize redirect url on login failure (default value is "/login?error")
+            .failureUrl("/login?error")
+            // Custom handlers override default behaviors (e.g., SavedRequestAwareAuthenticationSuccessHandler).
+            // Ensure your custom handlers perform their own redirects. For example, `.defaultSuccessUrl` is override by the `sendRedirect` in  `CustomAuthenticationSuccessHandler`.
+            // Therefore, do not forget to set the redirect url in the custom handler
+            .successHandler(customAuthenticationSuccessHandler)
+            .failureHandler(customAuthenticationFailureHandler)
+    );
+
+    http.logout(httpSecurityLogoutConfigurer ->
+            httpSecurityLogoutConfigurer
+                // Customize redirect url on logout (default value is "/login?logout")
+                .logoutSuccessUrl("/login?logout")
+                // Invalidate the HTTP session (clears any session attributes)
+                .invalidateHttpSession(true)
+                // Clear SecurityContext to prevent any in‐flight request from accidentally restoring credentials.
+                .clearAuthentication(true)
+                // Remove the JSESSIONID cookie in the browser; otherwise, browser keeps sending the old session ID
+                .deleteCookies("JSESSIONID")
+
+        // When you call logout, Spring Security invalidates the session on the server, but the browser may still hold the old JSESSIONID cookie.
+        // Because the browser appears “in a session” (via the stale cookie) even though it’s been invalidated server-side,
+        // any request carrying that cookie triggers the `invalidSessionUrl` redirect (if configured under http.sessionManagement).
+
+        // To avoid confusing behavior—such as seeing the “invalid session” page instead of /login?logout—ensure:
+        //   1. The JSESSIONID cookie is deleted immediately after logout.
+        //   2. Your invalidSessionUrl strategy aligns with the logout flow so that stale cookies don’t cause unexpected redirects.
+    );
 
     // Also support HTTP Basic authentication (e.g., for cURL or API clients)
     // Handle the http login by `BasicAuthenticationFilter.doFilterInternal`
@@ -94,8 +129,12 @@ public class SecurityFilterConfig {
 
     // For invalid session id, including session expiry, redirect users to a specific url.
     http.sessionManagement(
-        httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.invalidSessionUrl(
-            "/invalid_session").maximumSessions(3).maxSessionsPreventsLogin(true));
+        httpSecuritySessionManagementConfigurer ->
+            httpSecuritySessionManagementConfigurer
+                // Redirect any request carrying an invalid session info.
+                .invalidSessionUrl("/invalid_session")
+                .maximumSessions(10)
+                .maxSessionsPreventsLogin(true));
 
     // Session Fixation Attack
     // An attacker first acquires a valid session ID before the user authenticates. They then lure

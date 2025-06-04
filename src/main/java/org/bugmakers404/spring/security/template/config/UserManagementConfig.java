@@ -1,4 +1,4 @@
-package org.bugmakers404.tools.config;
+package org.bugmakers404.spring.security.template.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

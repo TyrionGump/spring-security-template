@@ -1,4 +1,4 @@
-package org.bugmakers404.tools.service;
+package org.bugmakers404.spring.security.template.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;

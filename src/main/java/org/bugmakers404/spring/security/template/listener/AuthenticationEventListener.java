@@ -1,4 +1,4 @@
-package org.bugmakers404.tools.listener;
+package org.bugmakers404.spring.security.template.listener;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -6,6 +6,9 @@ import org.springframework.security.authentication.event.AbstractAuthenticationF
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.stereotype.Component;
 
+/**
+ * Listens for Spring Security authentication result events.
+ */
 @Component
 @Slf4j
 public class AuthenticationEventListener {

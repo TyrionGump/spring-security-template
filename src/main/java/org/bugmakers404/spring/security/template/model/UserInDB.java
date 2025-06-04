@@ -1,4 +1,4 @@
-package org.bugmakers404.tools.model;
+package org.bugmakers404.spring.security.template.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,8 +1,8 @@
-package org.bugmakers404.tools.controller;
+package org.bugmakers404.spring.security.template.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.bugmakers404.tools.model.UserInDB;
-import org.bugmakers404.tools.dao.UserInDBDAO;
+import org.bugmakers404.spring.security.template.dao.UserInDBDAO;
+import org.bugmakers404.spring.security.template.model.UserInDB;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

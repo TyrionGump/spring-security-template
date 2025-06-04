@@ -1,6 +1,6 @@
-package org.bugmakers404.tools.controller;
+package org.bugmakers404.spring.security.template.controller;
 
-import org.bugmakers404.tools.config.SecurityFilterConfig;
+import org.bugmakers404.spring.security.template.config.SecurityFilterConfig;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
