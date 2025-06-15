@@ -20,7 +20,7 @@ import org.springframework.security.web.access.ExceptionTranslationFilter;
  * Registered in the SecurityFilterChain via {@code http.exceptionHandling(...)} in
  * {@link SecurityFilterConfig}.
  */
-public class CustomAccessDeniedException implements AccessDeniedHandler {
+public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
   @Override
   public void handle(HttpServletRequest request, HttpServletResponse response,
@@ -29,7 +29,7 @@ public class CustomAccessDeniedException implements AccessDeniedHandler {
     response.setStatus(HttpStatus.FORBIDDEN.value());
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-    String customizedMessage = "I's a customized error message of authorization failure";
+    String customizedMessage = "It's a customized error message of authorization failure";
     response.getWriter().write(customizedMessage);
   }
 }

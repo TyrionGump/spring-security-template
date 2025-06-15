@@ -25,7 +25,7 @@ the request, Spring clears the context to prevent data leaking into other reques
 
 ---
 
-## How it Works in a Web Request?
+## How does it Work in a Web Request?
 
 ### Default (ThreadLocal) Behaviour
 
@@ -43,8 +43,7 @@ etc.) and passes them to an `AuthenticationManager`. If authentication succeeds,
 object (containing principal, authorities, etc.) is returned.
 
 Spring then calls `SecurityContextHolder.getContext().setAuthentication(authResult);` so that
-downstream code (
-controllers, services) can retrieve the authenticated user
+downstream code (controllers, services) can retrieve the authenticated user
 via `SecurityContextHolder.getContext().getAuthentication();`. Or, have your components accept
 an `Authentication` argument directly—Spring will populate it
 automatically.

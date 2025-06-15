@@ -29,7 +29,7 @@ public class CustomBasicAuthenticationEntryPoint implements AuthenticationEntryP
     response.setStatus(HttpStatus.UNAUTHORIZED.value());
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-    String customizedMessage = "I's a customized error message of authentication failure";
+    String customizedMessage = "It's a customized error message of authentication failure";
     response.getWriter().write(customizedMessage);
   }
 }

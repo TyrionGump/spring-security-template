@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CORS & CSRF Demo</title>
+</head>
+<body>
+<h1>CORS & CSRF Demo</h1>
+
+<!-- GET button -->
+<button id="fetchBtn">Fetch Data (GET /cors)</button>
+<pre id="fetch_result"></pre>
+
+<!-- GET button -->
+<p>Fetch CSRF token. If you are using `XorCsrfTokenRequestAttributeHandler`, you will see different
+  masked CSRF token in each response.</p>
+<button id="fetchBtn2">Fetch Data (GET /cors)</button>
+<pre id="fetch_csrf_token"></pre>
+
+<!-- POST button -->
+<button id="postBtn">Update Data (POST /csrf)</button>
+<pre id="upload_result"></pre>
+
+<script>
+  // Helper to read a cookie by name
+  function getCookie(name) {
+    const matches = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+    return matches ? decodeURIComponent(matches[1]) : null;
+  }
+
+  // 1) GET /cors — establishes session, gets CORS & sets CSRF cookie
+  document.getElementById('fetchBtn').addEventListener('click', () => {
+    fetch('http://localhost:8080/cors', {
+      method: 'GET',
+      credentials: 'include'            // include JSESSIONID & XSRF-TOKEN cookies
+    })
+    .then(resp => {
+      if (!resp.ok) throw new Error(`HTTP ${resp.status} – ${resp.statusText}`);
+      return resp.json();
+    })
+    .then(data => {
+      document.getElementById('fetch_result').textContent = JSON.stringify(data, null, 2);
+    })
+    .catch(err => {
+      document.getElementById('fetch_result').textContent = err;
+    });
+  });
+
+  // 2) GET /csrf — gets CSRF token
+  document.getElementById('fetchBtn2').addEventListener('click', () => {
+    fetch('http://localhost:8080/csrf', {
+      method: 'GET',
+      credentials: 'include'            // include JSESSIONID & XSRF-TOKEN cookies
+    })
+    .then(resp => {
+      if (!resp.ok) throw new Error(`HTTP ${resp.status} – ${resp.statusText}`);
+      return resp.json();
+    })
+    .then(data => {
+      document.getElementById('fetch_csrf_token').textContent = JSON.stringify(data, null, 2);
+    })
+    .catch(err => {
+      document.getElementById('fetch_csrf_token').textContent = err;
+    });
+  });
+
+  // 3) POST /csrf — reads the CSRF token cookie and sends it in the header
+  document.getElementById('postBtn').addEventListener('click', () => {
+    const csrfToken = getCookie('XSRF-TOKEN');        // default cookie name
+
+    fetch('http://localhost:8080/csrf', {
+      method: 'POST',
+      credentials: 'include',                        // include cookies
+      headers: {
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': csrfToken                     // Spring’s expected header
+      },
+      body: JSON.stringify({ dummy: 'data' })         // or whatever payload
+    })
+    .then(resp => {
+      if (!resp.ok) throw new Error(`HTTP ${resp.status} – ${resp.statusText}`);
+      return resp.json();
+    })
+    .then(data => {
+      document.getElementById('upload_result').textContent = JSON.stringify(data, null, 2);
+    })
+    .catch(err => {
+      document.getElementById('upload_result').textContent = err;
+    });
+  });
+</script>
+</body>
+</html>
