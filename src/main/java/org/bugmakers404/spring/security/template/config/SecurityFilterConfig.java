@@ -7,6 +7,7 @@ import org.bugmakers404.spring.security.template.exception.CustomBasicAuthentica
 import org.bugmakers404.spring.security.template.filter.CsrfTokenResponseHeaderBindingFilter;
 import org.bugmakers404.spring.security.template.handler.CustomAuthenticationFailureHandler;
 import org.bugmakers404.spring.security.template.handler.CustomAuthenticationSuccessHandler;
+import org.bugmakers404.spring.security.template.model.UserRoles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -120,6 +121,43 @@ public class SecurityFilterConfig {
     return request -> configuration;
   }
 
+  /**
+   * Configures a security filter chain for role-based access to admin and user endpoints.
+   *
+   * <p>This chain applies only to the "/admin_access" and "/user_access" URLs:</p>
+   * <ul>
+   *   <li>"/admin_access" → requires ADMIN role.</li>
+   *   <li>"/user_access" → requires USER role.</li>
+   * </ul>
+   *
+   * <p><strong>Key points:</strong></p>
+   * <ul>
+   *   <li>{@code securityMatcher} scopes which URLs this chain handles.</li>
+   *   <li>{@code authorizeHttpRequests} defines the authorization rules.</li>
+   *   <li>{@code hasRole} automatically prefixes values with "ROLE_" to match stored role strings.</li>
+   *   <li>Use {@code hasAuthority} for fine‐grained privileges instead of roles.</li>
+   * </ul>
+   */
+  @Bean
+  @Order(2)
+  public SecurityFilterChain authorizationFilterChain(HttpSecurity http) throws Exception {
+    // Scope this chain to admin and user endpoints
+    http.securityMatcher("/admin_access", "/user_access");
+
+    // Define authorization rules for each matcher
+    http.authorizeHttpRequests(requests ->
+        requests
+            // Only users with ADMIN role can access /admin_access
+            .requestMatchers("/admin_access")
+            .hasRole(UserRoles.ROLE_ADMIN.getStrippedRoleString())
+            // Only users with USER role can access /user_access
+            .requestMatchers("/user_access")
+            .hasRole(UserRoles.ROLE_USER.getStrippedRoleString())
+    );
+
+    return http.build();
+  }
+
 
   /**
    * Catch-all security filter chain for any request not handled by more specific chains.
@@ -128,7 +166,7 @@ public class SecurityFilterConfig {
    * form-based and HTTP Basic login mechanisms.</p>
    */
   @Bean
-  @Order(2)
+  @Order(3)
   public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
     // Require authentication for all requests not matched by earlier filter chains
     // Explicitly set up the URLs. Otherwise, the default `AnyRequestMatcher.INSTANCE` pattern makes

@@ -6,6 +6,7 @@ import org.bugmakers404.spring.security.template.dao.UserInDBDAO;
 import org.bugmakers404.spring.security.template.model.UserInDB;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,7 +34,9 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
     UserBuilder userBuilder = User.builder();
     userBuilder.username(userInDB.getUsername())
         .password(userInDB.getPassword())
-        .authorities(userInDB.getRole());
+        // Assign granted authorities. Spring Security treats both roles and authorities the same.
+        // A "role" is just an authority prefixed with "ROLE_" by convention
+        .authorities(new SimpleGrantedAuthority(userInDB.getRole().name()));
 
     return userBuilder.build();
 

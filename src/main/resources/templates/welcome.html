@@ -1,11 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Welcome</title>
-</head>
+  <meta charset="UTF-8">
+  <title>Welcome</title></head>
 <body>
-<h1 th:text="${'Welcome-' + username}"></h1>
-<p th:text="${'Your role is -' + roles}"></p>
+<h1 th:text="${'Welcome - ' + username}"></h1>
+<p th:text="${'Your role is - ' + roles}"></p>
+
+<!-- Admin -->
+<button
+    onclick="
+      fetch('/admin_access')
+        .then(res => res.ok
+          ? res.text()
+          : Promise.reject(`Error ${res.status} – ${res.statusText}`))
+        .then(txt => output.innerText = txt)
+        .catch(err => output.innerText = err);
+    ">
+  Check Admin Access
+</button>
+
+<!-- User -->
+<button
+    onclick="
+      fetch('/user_access')
+        .then(res => res.ok
+          ? res.text()
+          : Promise.reject(`Error ${res.status} – ${res.statusText}`))
+        .then(txt => output.innerText = txt)
+        .catch(err => output.innerText = err);
+    ">
+  Check User Access
+</button>
+
+<!-- Single output area for both buttons -->
+<pre id="output" style="margin-top:1em; background:#f4f4f4; padding:1em;"></pre>
+
 <form th:action="@{/logout}" method="post">
   <button type="submit">Logout</button>
 </form>
