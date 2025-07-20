@@ -4,6 +4,8 @@ import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.bugmakers404.spring.security.template.exception.CustomAccessDeniedHandler;
 import org.bugmakers404.spring.security.template.exception.CustomBasicAuthenticationEntryPoint;
+import org.bugmakers404.spring.security.template.filter.AuthenticationAfterFilter;
+import org.bugmakers404.spring.security.template.filter.AuthenticationBeforeFilter;
 import org.bugmakers404.spring.security.template.filter.CsrfTokenResponseHeaderBindingFilter;
 import org.bugmakers404.spring.security.template.handler.CustomAuthenticationFailureHandler;
 import org.bugmakers404.spring.security.template.handler.CustomAuthenticationSuccessHandler;
@@ -14,6 +16,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
@@ -236,6 +239,10 @@ public class SecurityFilterConfig {
     http.sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer
         // Redirect any request carrying invalid session info.
         .invalidSessionUrl("/invalid_session").maximumSessions(10).maxSessionsPreventsLogin(true));
+
+    // Custom filters
+    http.addFilterBefore(new AuthenticationBeforeFilter(), BasicAuthenticationFilter.class)
+        .addFilterAfter(new AuthenticationAfterFilter(), BasicAuthenticationFilter.class);
 
     // Session Fixation Attack
     // An attacker first acquires a valid session ID before the user authenticates. They then lure
