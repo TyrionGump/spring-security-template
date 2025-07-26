@@ -29,6 +29,10 @@ dependencies {
     runtimeOnly(libs.pgsql.driver)
     runtimeOnly(libs.spring.boot.devtools)
 
+    implementation(libs.jjwt.api)
+    implementation(libs.jjwt.impl)
+    implementation(libs.jjwt.json)
+
 
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.boot.security.test)

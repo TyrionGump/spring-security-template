@@ -7,6 +7,8 @@ import org.bugmakers404.spring.security.template.exception.CustomBasicAuthentica
 import org.bugmakers404.spring.security.template.filter.AuthenticationAfterFilter;
 import org.bugmakers404.spring.security.template.filter.AuthenticationBeforeFilter;
 import org.bugmakers404.spring.security.template.filter.CsrfTokenResponseHeaderBindingFilter;
+import org.bugmakers404.spring.security.template.filter.JWTTokenGeneratorFilter;
+import org.bugmakers404.spring.security.template.filter.JWTTokenValidatorFilter;
 import org.bugmakers404.spring.security.template.handler.CustomAuthenticationFailureHandler;
 import org.bugmakers404.spring.security.template.handler.CustomAuthenticationSuccessHandler;
 import org.bugmakers404.spring.security.template.model.UserRoles;
@@ -240,10 +242,6 @@ public class SecurityFilterConfig {
         // Redirect any request carrying invalid session info.
         .invalidSessionUrl("/invalid_session").maximumSessions(10).maxSessionsPreventsLogin(true));
 
-    // Custom filters
-    http.addFilterBefore(new AuthenticationBeforeFilter(), BasicAuthenticationFilter.class)
-        .addFilterAfter(new AuthenticationAfterFilter(), BasicAuthenticationFilter.class);
-
     // Session Fixation Attack
     // An attacker first acquires a valid session ID before the user authenticates. They then lure
     // the victim into using that same ID (for example, localhost:8080?sessionId=123456).
@@ -254,6 +252,32 @@ public class SecurityFilterConfig {
         sessionManagementConfigurer -> sessionManagementConfigurer.sessionFixation()
             .changeSessionId());
 
+    // Custom filters
+    http.addFilterBefore(new AuthenticationBeforeFilter(), BasicAuthenticationFilter.class)
+        .addFilterAfter(new AuthenticationAfterFilter(), BasicAuthenticationFilter.class);
+
+//    // Configure stateless session management: use JWTs instead of JSESSIONID cookies.
+//    http.sessionManagement(sessionConfig ->
+//        // SessionCreationPolicy.STATELESS ensures that Spring Security:
+//        //   1. Will never create an HttpSession.
+//        //   2. Will not use an existing HttpSession to obtain the SecurityContext.
+//        //   3. Requires each request to carry its own authentication credentials (e.g., a JWT).
+//        // This removes server‑side session storage, simplifies horizontal scaling,
+//        // and enforces that every request is independently authenticated.
+//        //   • Spring Security form‑login relies on sessions to:
+//        //       a. Persist the SecurityContext after successful authentication.
+//        //       b. Save the original request URL for post‑login redirect.
+//        //   • Without a session, login cannot be persisted or redirected—so you remain on the login page.
+//        sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//    );
+
+    // Register custom JWT filters around BasicAuthenticationFilter:
+    // - JWTTokenValidatorFilter validates incoming tokens before authentication.
+    // - JWTTokenGeneratorFilter issues tokens after successful authentication.
+    // Note: These filters won’t integrate with Spring Security’s default login‑page redirects.
+    //       Test them using Postman or a similar REST client.
+    http.addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
+        .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class);
     return http.build();
   }
 }

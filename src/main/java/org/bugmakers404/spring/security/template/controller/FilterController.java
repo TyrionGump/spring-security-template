@@ -38,4 +38,13 @@ public class FilterController {
     log.info("Hit the endpoint /invalid_session");
     return "The session ID is invalid. A potential reason is that the session has expired";
   }
+
+  /**
+   * This is expected to be hit by Postman to see how JWT token is generated or sent.
+   */
+  @GetMapping("/generate_jwt_token")
+  public String jwtToken() {
+    log.info("Hit the endpoint /generate_jwt_token");
+    return "This is a JWT token endpoint. You can check the generated token in the response JWT_Authorization header. Then, you can use it to access the protected endpoint /default.";
+  }
 }
