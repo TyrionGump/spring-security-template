@@ -34,9 +34,10 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
     UserBuilder userBuilder = User.builder();
     userBuilder.username(userInDB.getUsername())
         .password(userInDB.getPassword())
-        // Assign granted authorities. Spring Security treats both roles and authorities the same.
-        // A "role" is just an authority prefixed with "ROLE_" by convention
-        .authorities(new SimpleGrantedAuthority(userInDB.getRole().name()));
+        // We add "ROLE_" in front because Spring’s default setup only recognizes roles that start
+        // with that exact text. If you leave it off, checks like hasRole("USER") won’t work.
+        // For details see `AuthorityAuthorizationManager`
+        .authorities(new SimpleGrantedAuthority("ROLE_" + userInDB.getRole().name()));
 
     return userBuilder.build();
 

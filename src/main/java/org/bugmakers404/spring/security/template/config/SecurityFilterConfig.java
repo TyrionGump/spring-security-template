@@ -154,10 +154,10 @@ public class SecurityFilterConfig {
         requests
             // Only users with ADMIN role can access /admin_access
             .requestMatchers("/admin_access")
-            .hasRole(UserRoles.ROLE_ADMIN.getStrippedRoleString())
+            .hasRole(UserRoles.ADMIN.toString())
             // Only users with USER role can access /user_access
             .requestMatchers("/user_access")
-            .hasRole(UserRoles.ROLE_USER.getStrippedRoleString())
+            .hasRole(UserRoles.USER.toString())
     );
 
     return http.build();

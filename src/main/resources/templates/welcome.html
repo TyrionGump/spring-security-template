@@ -17,7 +17,19 @@
         .then(txt => output.innerText = txt)
         .catch(err => output.innerText = err);
     ">
-  Check Admin Access
+  Check Admin URL Access
+</button>
+
+<button
+    onclick="
+      fetch('/admin_method_access')
+        .then(res => res.ok
+          ? res.text()
+          : Promise.reject(`Error ${res.status} – ${res.statusText}`))
+        .then(txt => output.innerText = txt)
+        .catch(err => output.innerText = err);
+    ">
+  Check Admin Method Access
 </button>
 
 <!-- User -->
@@ -30,7 +42,19 @@
         .then(txt => output.innerText = txt)
         .catch(err => output.innerText = err);
     ">
-  Check User Access
+  Check User URL Access
+</button>
+
+<button
+    onclick="
+      fetch('/user_method_access')
+        .then(res => res.ok
+          ? res.text()
+          : Promise.reject(`Error ${res.status} – ${res.statusText}`))
+        .then(txt => output.innerText = txt)
+        .catch(err => output.innerText = err);
+    ">
+  Check User Method Access
 </button>
 
 <!-- Single output area for both buttons -->
