@@ -16,6 +16,8 @@ spring-boot-security = { module = "org.springframework.boot:spring-boot-starter-
 spring-boot-security-test = { module = "org.springframework.security:spring-security-test" }
 spring-boot-thymeleaf = { module = "org.springframework.boot:spring-boot-starter-thymeleaf" }
 spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
+spring-boot-oauth2-client = { module = "org.springframework.boot:spring-boot-starter-oauth2-client" }
+spring-boot-oauth2-server = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server" }
 
 jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
 jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }

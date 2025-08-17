@@ -15,6 +15,7 @@ import org.bugmakers404.spring.security.template.model.UserRoles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
@@ -204,6 +205,9 @@ public class SecurityFilterConfig {
         .successHandler(customAuthenticationSuccessHandler)
         .failureHandler(customAuthenticationFailureHandler));
 
+    // Use default config to compare with OAuth2 on the same /login page.
+//    http.formLogin(Customizer.withDefaults());
+
     http.logout(logoutConfigurer -> logoutConfigurer
             // Customize redirect url on logout (default value is "/login?logout")
             .logoutSuccessUrl("/login?logout")
@@ -230,6 +234,9 @@ public class SecurityFilterConfig {
         // and return a custom response on authentication failure.
         httpBasicConfigurer -> httpBasicConfigurer.authenticationEntryPoint(
             new CustomBasicAuthenticationEntryPoint()));
+
+    // Also support OAuth2 authentication and authorization.
+    http.oauth2Login(Customizer.withDefaults());
 
     http.exceptionHandling(
         // We override the default ·AccessDeniedHandler to throw our own exception and return a
@@ -280,4 +287,32 @@ public class SecurityFilterConfig {
         .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class);
     return http.build();
   }
+
+  /**
+   * Before testing, please set `http.formLogin` in `defaultSecurityFilterChain` as default.
+   * Therefore, you can test the spring security username/password login form and third-party login
+   * at the same time on the same default /login page.
+   * <p>
+   * Registers OAuth2 client configurations for Spring Security.
+   * Add more providers (Google, Facebook, etc.) to this repository as needed. You can replace the
+   * related bean-based config with the oauth2 configs in the "application.properties" file.
+   */
+//  @Bean
+//  ClientRegistrationRepository clientRegistrationRepository() {
+//    ClientRegistration github = githubClientRegistration();
+//    return new InMemoryClientRegistrationRepository(github);
+//  }
+
+  /**
+   * GitHub OAuth client configuration.
+   * Create a GitHub OAuth app to obtain the clientId/clientSecret
+   * (GitHub → Settings → Developer settings → OAuth Apps).
+   * Avoid hardcoding secrets—use application properties or environment variables.
+   */
+//  private ClientRegistration githubClientRegistration() {
+//    // Create `clientId` and `clientSecret` by registering your application on GitHub.
+//    // Profile -> Settings -> OAuth Apps -> New OAuth App
+//    return CommonOAuth2Provider.GITHUB.getBuilder("github").clientId("mock_client_id")
+//        .clientSecret("mock_client_secret").build();
+//  }
 }

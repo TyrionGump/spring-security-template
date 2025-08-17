@@ -23,6 +23,8 @@ dependencies {
     implementation(libs.spring.boot.starter.jpa)
     implementation(libs.spring.boot.security)
     implementation(libs.spring.boot.thymeleaf)
+    implementation(libs.spring.boot.oauth2.client)
+    implementation(libs.spring.boot.oauth2.server)
 
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
